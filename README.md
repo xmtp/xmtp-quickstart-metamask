@@ -1,5 +1,7 @@
 # XMTP PWA with MetamaskSDK Tutorial
 
+![](modal.png)
+
 ### Installation
 
 ```bash
