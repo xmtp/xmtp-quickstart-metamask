@@ -1,90 +1,94 @@
-# XMTP PWA with Thirdweb Tutorial
+# XMTP PWA with MetamaskSDK Tutorial
 
 ### Installation
 
 ```bash
-npm install
-npm run start
+bun install
+bun start
 ```
 
-This tutorial will guide you through the process of creating an XMTP app with Thirdweb.
+This tutorial will guide you through the process of creating an XMTP app with MetamaskSDK.
 
-### Step 0: Setup
+### Setup
 
-For thirdweb SDK to work as a fresh install you need to install this packages
+For MetamaskSDK SDK to work as a fresh install you need to install this packages
 
 ```bash
-npm install @thirdweb-dev/react "ethers@^5"
+bun install @metamask/sdk-react ethers@^5
 ```
 
-You also need to polyfill with multiple libraries. Copy paste this into your `packages.json`
+### Setting up the MetaMask Provider
 
-```bash
-"url": "latest",
-"http": "npm:http-browserify",
-"https": "npm:https-browserify",
-"zlib": "npm:browserify-zlib",
-"http-browserify": "latest",
-"https-browserify": "latest",
-"browserify-zlib": "latest",
-"assert": "^2.0.0",
-"stream": "^0.0.2"
-```
-
-### Step 1: Setup
-
-First, you need to import the necessary libraries and components. In your `App.js` file, import the `ThirdwebProvider` from `@thirdweb-dev/react` and wrap your main component with it.
+Wrap your application with the MetaMaskProvider from `@metamask/sdk-react`.
 
 ```jsx
-import { ThirdwebProvider } from "@thirdweb-dev/react";
-```
+import { useEffect, useState } from "react";
+import { MetaMaskProvider } from "@metamask/sdk-react";
+import Page from "./Page";
 
-```jsx
-<ThirdwebProvider
-  authConfig={{
-    authUrl: "/",
-    domain: "http://localhost:3000/",
-  }}
-  activeChain="ethereum"
->
-  <InboxPage />
-</ThirdwebProvider>
-```
+export default function App() {
+  const [ready, setReady] = useState(false);
 
-### Step 2: Web3Button
-
-Use the `Web3Button` hook to get the wallet modal button.
-
-![](modal.png)
-
-```jsx
-{
-  !signer && (
-    <div style={styles.xmtpContainer}>
-      <Web3Button action={() => login()}>Login</Web3Button>
-    </div>
-  );
-}
-{
-  signer && (
-    <FloatingInbox isPWA={isPWA} wallet={signer} onLogout={handleLogout} />
+  useEffect(() => {
+    setReady(true);
+  }, []);
+  return (
+    <>
+      {ready ? (
+        <MetaMaskProvider
+          debug={false}
+          sdkOptions={{
+            checkInstallationImmediately: false,
+            dappMetadata: {
+              name: "Demo React App",
+              url: window.location.host,
+            },
+          }}
+        >
+          <Page />
+        </MetaMaskProvider>
+      ) : null}
+    </>
   );
 }
 ```
 
-### Step 3: XMTP Integration
+### MetaMask Connection
 
-In your component, use the `useSigner` hook from `@xmtp/react-sdk` to get the XMTP client.
+Use the `useSDK` hook from `@metamask/sdk-react` to manage MetaMask connections.
 
 ```jsx
-import { useSigner } from "@thirdweb-dev/react";
+import React, { useState } from 'react';
+import { useSDK } from '@metamask/sdk-react';
+
+export const App = () => {
+  const [account, setAccount] = useState<string>();
+  const { sdk, connected, connecting, provider, chainId } = useSDK();
+
+  const connect = async () => {
+    try {
+      const accounts = await sdk?.connect();
+      const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = await web3Provider.getSigner();
+      setAccount(accounts?.[0]);
+      setSigner(signer);
+    } catch (err) {
+      console.warn(`failed to connect..`, err);
+    }
+  };
+
+};
+```
+
+Use the XMTP client in your components:
+
+```jsx
 import { useClient } from "@xmtp/react-sdk";
 
-//Thirdweb
-const signer = useSigner();
-//XMTP
+// Example usage
 const { client, error, isLoading, initialize } = useClient();
-await initialize({ keys, options, signer });
+// Initialize with signer obtained from MetaMask
+await initialize({ signer });
 ```
 
 ### Step 4: Message Handling
@@ -105,4 +109,6 @@ const { conversations } = useConversations();
 const { error } = useStreamConversations(onConversation);
 ```
 
-That's it! You've now created an XMTP app with Thirdweb.
+That's it! You've now created an XMTP app with MetamaskSDK.
+
+- [Metamask Documentation](https://docs.metamask.io/wallet/how-to/connect/set-up-sdk/javascript/react/)
