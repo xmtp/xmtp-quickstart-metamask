@@ -65,14 +65,21 @@ export const App = () => {
   const [account, setAccount] = useState<string>();
   const { sdk, connected, connecting, provider, chainId } = useSDK();
 
+  // Function to connect to the SDK
   const connect = async () => {
     try {
+      // Attempt to connect to the SDK
       const accounts = await sdk?.connect();
+      // Create a new Web3 provider
       const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+      // Get the signer from the provider
       const signer = await web3Provider.getSigner();
+      // Set the account and signer state
       setAccount(accounts?.[0]);
+      //The signer is what we are going to use for XMTP later
       setSigner(signer);
     } catch (err) {
+      // Log any errors that occur during connection
       console.warn(`failed to connect..`, err);
     }
   };
@@ -91,7 +98,7 @@ const { client, error, isLoading, initialize } = useClient();
 await initialize({ signer });
 ```
 
-### Step 4: Message Handling
+### Message Handling
 
 In your `MessageContainer` component, use the `useMessages` and `useSendMessage` hooks from `@xmtp/react-sdk` to get the messages and send messages.
 
@@ -100,7 +107,7 @@ const { messages, isLoading } = useMessages(conversation);
 const { sendMessage } = useSendMessage();
 ```
 
-### Step 5: Conversation Handling
+### Conversation Handling
 
 In your ListConversations component, use the useConversations and useStreamConversations hooks from @xmtp/react-sdk to get the conversations and stream new conversations.
 

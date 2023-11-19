@@ -9,14 +9,21 @@ const InboxPage = () => {
   const { sdk, connected, connecting, provider, ready, chainId } = useSDK();
   const [loggingOut, setLoggingOut] = useState(false); // Add this line
 
+  // Function to connect to the SDK
   const connect = async () => {
     try {
+      // Attempt to connect to the SDK
       const accounts = await sdk?.connect();
+      // Create a new Web3 provider
       const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+      // Get the signer from the provider
       const signer = await web3Provider.getSigner();
+      // Set the account and signer state
       setAccount(accounts?.[0]);
+      //The signer is what we are going to use for XMTP later
       setSigner(signer);
     } catch (err) {
+      // Log any errors that occur during connection
       console.warn(`failed to connect..`, err);
     }
   };
