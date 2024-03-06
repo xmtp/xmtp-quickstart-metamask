@@ -1,15 +1,31 @@
-# XMTP PWA with MetamaskSDK Tutorial
+# XMTP PWA with WalletConnect & Wagmi
 
-![](modal.png)
+![xmtp](https://github.com/xmtp/xmtp-quickstart-reactjs/assets/1447073/3f2979ec-4d13-4c3d-bf20-deab3b2ffaa1)
 
-### Installation
+## Installation
 
 ```bash
-bun install
-bun start
+yarn install
+yarn dev
 ```
 
-This tutorial will guide you through the process of creating an XMTP app with MetamaskSDK.
+## Concepts
+
+Head to our docs to understand XMTP's concepts
+
+- [Get started](https://xmtp.org/docs/build/get-started/overview?sdk=react)
+- [Authentication](https://xmtp.org/docs/build/authentication?sdk=react)
+- [Conversations](https://xmtp.org/docs/build/conversations?sdk=react)
+- [Messages](https://xmtp.org/docs/build/messages/?sdk=react)
+- [Streams](https://xmtp.org/docs/build/streams/?sdk=react)
+
+#### Troubleshooting
+
+If you get into issues with `Buffer` and `polyfills` check out the fix below:
+
+- [Check out Buffer issue](https://github.com/xmtp/xmtp-js/issues/487)
+
+## Metamask
 
 ### Setup
 
@@ -55,7 +71,7 @@ export default function App() {
 }
 ```
 
-### MetaMask Connection
+### Connection
 
 Use the `useSDK` hook from `@metamask/sdk-react` to manage MetaMask connections.
 
@@ -118,6 +134,6 @@ const { conversations } = useConversations();
 const { error } = useStreamConversations(onConversation);
 ```
 
-That's it! You've now created an XMTP app with MetamaskSDK.
-
 - [Metamask Documentation](https://docs.metamask.io/wallet/how-to/connect/set-up-sdk/javascript/react/)
+
+  That's it! You've now created an XMTP app with MetamaskSDK.
