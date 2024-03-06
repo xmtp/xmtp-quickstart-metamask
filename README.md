@@ -116,24 +116,6 @@ const { client, error, isLoading, initialize } = useClient();
 await initialize({ signer });
 ```
 
-### Message Handling
-
-In your `MessageContainer` component, use the `useMessages` and `useSendMessage` hooks from `@xmtp/react-sdk` to get the messages and send messages.
-
-```jsx
-const { messages, isLoading } = useMessages(conversation);
-const { sendMessage } = useSendMessage();
-```
-
-### Conversation Handling
-
-In your ListConversations component, use the useConversations and useStreamConversations hooks from @xmtp/react-sdk to get the conversations and stream new conversations.
-
-```jsx
-const { conversations } = useConversations();
-const { error } = useStreamConversations(onConversation);
-```
-
 - [Metamask Documentation](https://docs.metamask.io/wallet/how-to/connect/set-up-sdk/javascript/react/)
 
   That's it! You've now created an XMTP app with MetamaskSDK.
